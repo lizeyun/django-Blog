@@ -1,0 +1,141 @@
+{% extends "base1.html" %}
+{% block content %}
+{% load custom_markdown %}
+<div id="wrapper">
+	<!-- end #header -->
+	<div id="page">
+		<div id="page-bgtop">
+			<div id="page-bgbtm">
+				<div id="content">
+			       <div class="content">
+                    <div style="background: #D7FFEE; border-radius: 5px;">
+                       <h4 style="padding: 6px;"><a href="/blog/">首页</a>
+                            {% if first_title %}
+                                <span class="glyphicon glyphicon-chevron-right" style="font-size: 14px;"></span>
+                                <a href="">{{ first_title }}</a>
+                            {% endif %}
+                            {% if sec_title %}
+                            <span class="glyphicon glyphicon-chevron-right" style="font-size: 14px;"></span>
+                                <a href="">{{ sec_title }}</a>
+                            {% endif %}
+                        </h4></div>
+						<h2 class="head"><a href="">{{ article_list.title }}</a></h2>
+						<p class="meta"><span class="date">{{ article_list.create_time | date:"Y-m-d"  }}</span><span class="posted">
+
+						Posted by <a href="#">lz</a></span></p>
+						<div style="clear: both;">&nbsp;</div>
+						<div class="entry" style="font-size:15px">
+							This is <strong>Highlight test</strong>
+							{{ article_list.content | djangomarkdown }}
+							<p style="font-size:15px;float:right" id="like">LikeIt({{ article_list.like_count }})
+							<a href={% url 'like_view' article_list.id %} >
+							  <span class="glyphicon glyphicon-thumbs-up"></span>
+							</a>
+						  </p>
+						</div>
+					</div>
+
+					<div class="well" style="margin-top:120px;padding:0 20px;background: #ECECFF" >
+						<h4>Leave a Comment as a Customer:</h4>
+						<form role="form" method="post" action="{% url 'postcomment-view' article_list.id %}" >{% csrf_token %}
+                            <div class="form-group" style="float:left;width:277px;margin-right: 20px;">
+
+                                <input type="text" class="form-control" id="name" name='username' placeholder="昵称" required>
+                              </div>
+                             <div class="form-group"  style="float:left;width:277px;">
+
+                                <input type="email" class="form-control" id="name" name='email' placeholder="Email">
+                              </div>
+							<div class="form-group">
+								<textarea class="form-control" rows="3" name='content' placeholder="评论内容" required></textarea>
+							</div>
+							<button type="submit" class="btn btn-primary btn-sm" style="margin-bottom:10px">Submit</button>
+						</form>
+					</div>
+                    {% for comment in comments %}
+                        <div class="media">
+                            <a class="pull-left" href="#">
+                                <img class="media-object" src="/static/images/head.png" alt="">
+                            </a>
+                            <div class="media-body">
+                            <h4 class="media-heading">{{ comment.username }}
+                                <small>{{ comment.create_time  }}</small>
+                            </h4>
+                                {{ comment.content }}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+					<div style="clear: both;">&nbsp;</div>
+				</div>
+				<!-- end #content -->
+				<div id="sidebar">
+					<ul>
+						<li>
+							<h2>Search Here</h2>
+							<div id="search" >
+								<form method="GET" action="/blog/search">{% csrf_token %}
+									<div>
+										<input type="text" name="word" id="search-text" placeholder="查找标题、内容" value=""/>
+										<input type="submit" id="search-submit" value="" />
+									</div>
+								</form>
+							</div>
+							<div style="clear: both;">&nbsp;</div>
+						</li>
+						<li>
+							<h2>Aliquam tempus</h2>
+							<p> 死亡如风， 常伴吾身</p>
+						</li>
+						<li>
+							<h2>Categories</h2>
+							<!--ul>
+								<li><a href="#">News</a></li>
+								<li><a href="#">C</a></li>
+								<li><a href="#">Metus aliquam pellentesque</a></li>
+
+							</ul-->
+							<div id="tags">
+								<!--span class="label label-default" ></span-->
+								{% for tags in r_tag_list %}
+                                <a href="{% url 'tag_view' tags.name %}" class="btn btn-info btn-sm" style="height:25px">{{ tags.name }}
+                                </a>
+				                {% endfor %}
+
+							</div>
+						</li>
+						<li>
+							<h2>TImes</h2>
+							<ul>
+								<!--li><a href="#">2017-3 [1]</a></li>
+								<li><a href="#">2017-2 [2]</a></li-->
+						        {% for date in year_month_number %}
+                                <li><a href="/blog/datearticle/{{ date.year }}/{{ date.month }}">
+                                            {{ date.year }}-{{ date.month }} [{{ date.counter }}]
+                                            </a>
+                                </li>
+                                {% endfor %}
+							</ul>
+						</li>
+						<li>
+							<h2>top 10</h2>
+							<ul>
+								 {% if article_rank %}
+
+                                    {% for hot in article_rank %}
+                                        <li ><a href="/blog/article/{{ hot.id }}">{{ hot.title }}</a></li>
+                                    {% endfor %}
+                                {% endif %}
+
+							</ul>
+						</li>
+					</ul>
+				</div>
+				<!-- end #sidebar -->
+				<div style="clear: both;">&nbsp;</div>
+			</div>
+		</div>
+	</div>
+	<!-- end #page -->
+</div>
+	{% endblock %}

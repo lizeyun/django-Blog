@@ -1,0 +1,27 @@
+
+2017-03-26:
+            1.新增Markdown / highlight / 文本编辑器```功能
+                感谢：http://www.tuicool.com/articles/JVf6riQ
+
+2017-03-28:
+            1.新增点赞功能 like
+
+2017-03-30:
+            1.修改评论为页面局部刷新
+            2.修改点赞为页面xxxx $.ajax
+            3.标签分类附加颜色
+
+2017-04-06:
+            1.修改为可导入bootstrap + jquery
+            2.页面重新调整
+            3.开始编写用户登录注册支持
+
+2017-04-10:
+            error1: int() base 10:admin   --> 查看对应migrations 下面的log ,修改
+            error2: Errno[10053]          --> 还不知道
+                                            发现是自己的ajax里面的id号之类的写错了，晕
+
+2017-04-11:
+            error1: list indices must be integers not str -->因为forms.py中把 passwd = self.cleaned_data.get["passwd"]
+                                                             写成                      self.ched_data又耽误了半天
+            初步完成用户登录 ， 注册

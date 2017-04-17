@@ -1,0 +1,214 @@
+{% extends "base2.html" %}
+{% block content %}
+{% load custom_markdown %}
+<div class="content">
+    <div class="content_resize">
+      <div class="mainbar">
+            <div class="article" id='sec_daohang'>
+                    <a href="/blog/"><i class="fa fa-home"></i></a>&nbsp
+                    {% if first_title %}
+                        <i class="fa fa-chevron-right"></i>&nbsp
+                        <a href="">{{ first_title }}</a>
+                    {% endif %}
+                    {% if sec_title %}
+                       &nbsp <i class="fa fa-chevron-right"></i>&nbsp
+                        <a href="">{{ sec_title }}</a>
+                    {% endif %}
+            </div>
+          <div class="article">
+              <p style="font-size: 23px;padding: 0;margin: 0"><span class="title">{{ article_list.title |capfirst }}</span> .</p>
+              <div class="clr"></div>
+          <p>Posted by <a href="#">lzy</a>  <span>&nbsp;&bull;&nbsp;</span>  Filed under <a href="#">templates</a>, <a href="#">internet</a></p>
+          <p>{{ article_list.content | djangomarkdown }} </p>
+          <p><i class="fa fa-tags"></i>
+            {% for tag in article_list.tags.all %}
+              <a href="/blog/tag/{{ tag }}">{{ tag }}</a>
+            {% endfor %}
+          </p>
+          <p><a href="#"><strong>Comments ({{ article_list.comment_set.all.count }})</strong></a>  <span>&nbsp;&bull;&nbsp;</span>{{ article_list.create_time | date:"Y-m-d"  }}<span>&nbsp;&bull;&nbsp;</span>  <a href="#"><strong>Edit</strong></a>
+               <span id="like">
+                   <a href="javascript:;" onclick="blog();" id="like_btn"><i class="fa fa-heart-o"></i></a> {{ article_list.like_count }}
+               </span>
+          </p>
+        </div>
+        <script>
+                function blog(){
+
+                    $.ajax({
+                             type:"get",
+                             dataType:"json",
+                             url:"/blog/like/{{ article_list.id }}/",
+                    success: function(data){
+                            var newcomment = '<a href="javascript:;" id="like_btn" style="color:#FF5151"><i class="fa fa-heart"></i></a>&nbsp'
+                        + data.num;
+                            $("#like").html(newcomment);
+                          /*  loadNewComments()*/
+                             }
+                    });
+                            return false;
+                     }
+
+        </script>
+        {% include './ajax_comment.html' %}
+
+        <div class="article">
+          <h2><span></span>Comment </h2><div class="clr"></div>
+          <form method="post" id="leavereply" enctype="multipart/form-data">
+          <ol><li>
+            <label for="name">Name <font color="red">*</font></label>
+            <input id="name" name="username" class="text" placeholder="请输入名字"/>
+          </li><li>
+            <label for="email">Email Address </label>
+            <input id="email" name="email" class="text" placeholder="邮件地址"/>
+          </li><li>
+            <label for="message">Your Message <font color="red">*</font> </label>
+            <textarea id="message" name="content" rows="8" cols="50" placeholder="评论内容"></textarea>
+          </li><li>
+            <input type="image" name="imageField" id="imageField" src="/static/images/submit.gif" class="send" />
+            <div class="clr"></div>
+          </li></ol>
+          </form>
+            <script>
+                $(function() {
+                         $("#leavereply").submit(function(){
+                         var replay_name = $("#name").val();
+                         var replay_email = $("#email").val();
+                         var replay_message = $("#message").val()
+                    $.ajax({
+                             type:"post",
+                             dataType:"json",
+                             url:"/blog/comment/{{ article_list.id }}/",
+                             data: {
+                             'username': replay_name,
+                             'email': replay_email,
+                             'content': replay_message
+                             },
+                    success: function(data){
+                            $('#leavereply')[0].reset();
+                            var newcomment =
+                            '<div class="comment">\
+                                <a href="#"><img src="/static/images/userpic.gif" width="40" height="40" alt="user" class="userpic" /></a>\
+                                <p><a href="#">' + data.content.username + '</a> Says:<br />' + data.content.create_time + '</p>\
+                                <p>' + data.content.content + '</p></div>';
+                            $("#comment").append(newcomment);
+                          /*  loadNewComments()*/
+                             }
+                    });
+                            return false;
+                     });
+                 });
+
+
+            </script>
+        </div>
+      </div>
+     <div class="sidebar">
+         <p>
+            {% if not user.is_authenticated %}
+                <button id="login" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
+                    登录 | 注册</button>
+            {% else %}
+                 <ol class="dropdown">
+                <a onMouseOver="this.style.color='#2cadff'" title="{{user.username}}"
+                   onMouseOut="this.style.color='black'" href="javascript:;"
+                   style="width: 150px; padding:10px; font-size: 15px;border-right: 0px;color: black;" data-toggle="dropdown">
+                        <img src="/static/images/head.png" width=50 height=50 alt="" width="40">
+
+                        &nbsp;
+                        {{ user }}
+                </a>
+                <ul class="dropdown-menu navbar-right" >
+                    <li><a  href="{{changepassword_url}}"style="color: #5f3b11;border-right: 0px;padding:5px" >
+                        <span class="glyphicon glyphicon-lock"></span>
+                        更改密码</a></li>
+                    <li><a id="logout" href="javascript:;" style="color: #5f3b11;border-right: 0px;padding:5px" >
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        退出登录</a></li>
+                </ul>
+
+                </ol>
+            {% endif %}
+            </p>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    {% include './login.html' %}
+                    {% include './regi.html' %}
+                </div>
+            </div>
+        <script language="JavaScript" type="text/JavaScript">
+            function show() {
+                $(regi).css("display","block");
+                $(login_1).css("display","none");
+                }
+            function hide() {
+                $(regi).css("display", "none");
+                $(login_1).css("display","block");
+                }
+            $("#logout").click(function(){
+                $.ajax({
+                    type:"POST",
+                    url:"/blog/user/logout/",
+                    success:function(data,textStatus){
+                        alert(data);
+                        location.reload();
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        alert(XMLHttpRequest.responseText);
+                    }
+                    });
+                    return false;
+                });
+        </script>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"><span class="glyphicon glyphicon-tags"></span>&nbsp&nbsp标签分类</p>
+          <div class="clr"></div>
+          <ul class="sb_menu">
+
+                <li style="line-height: 28px;border-bottom: hidden;padding-left: 0px" id="tags">
+
+                    {% for tags in r_tag_list %}
+                        <a class="tag_color" style="font-size: 13px;" href="{% url 'tag_view' tags.name %}">
+                        <span id="tag" class="tag_{{ tags.id | get_digit:1 }}">
+                            {{ tags.name }}
+                        </span></a>
+                    {% endfor %}
+                </li>
+          </ul>
+        </div>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"><span class="glyphicon glyphicon-calendar"></span> 时间分类</p>
+          <div class="clr"></div>
+          <ul class="ex_menu">
+            {% for date in year_month_number %}
+            <li><a href="/blog/datearticle/{{ date.year }}/{{ date.month }}">
+                        {{ date.year }}-{{ date.month }} [{{ date.counter }}]
+                        </a><br />
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="gadget">
+            <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"> <span class="glyphicon glyphicon-flag"></span>  热门文章</p>
+            <div class="clr"></div>
+            <ul class="ex_menu">
+                {% if article_rank %}
+
+                {% for hot in article_rank %}
+                    <li><a href="/blog/article/{{ hot.id }}">{{ hot.title }}</a></li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0">Say something</p>
+          <div class="clr"></div>
+          <p>   <img src="/static/images/test_1.gif" alt="image" width="18" height="17" /> <em>无人与我共黄昏 </em>.<img src="/static/images/test_2.gif" alt="image" width="18" height="17" /></p>
+          <p style="float:right;"><strong>Earl Nightingale</strong></p>
+          </div>
+      </div>
+      <div class="clr"></div>
+    </div>
+	</div>
+
+
+  		{% endblock %}

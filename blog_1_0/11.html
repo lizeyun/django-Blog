@@ -1,0 +1,41 @@
+<html>  
+<head>  
+    <title>modal box</title>  
+<style type="text/css">  
+*{  
+    margin:50px;  
+    padding:0px;  
+}  
+</style>  
+</head>  
+<body>  
+<!--先在CSS里面把zindex的值设为负值让其在背景图片后面-->  
+<div style="background:url(http://pic.90sjimg.com/back_pic/00/04/27/49/5b1eee8bdba7b9aefc62fccafe72737c.jpg);width:100%;height:800px;z-index:1;">  
+    <button  id="modal-box">弹框</button>  
+    <div id="modal-show" style="position:fixed;z-index:-9999;width:100%;height:100%;background-color:rgba(236, 214, 214, 0.2);">    
+    </div>  
+    <div id="modal-show2" style="position:fixed;z-index:-9999;width:30%;height:30%;margin:200px auto;border:1px solid red;">    
+            欢迎你登录  
+    </div>  
+  
+</div>   
+  
+<script type="text/javascript">     
+document.getElementById("modal-box").onclick=function()//点击按钮改变zIndex的值为1让模态框在背景图的前面  
+{  
+    document.getElementById("modal-show").style.zIndex = "1";  
+    document.getElementById("modal-show2").style.zIndex = "1";  
+};  
+  
+document.getElementById("modal-show").onclick=function()//点击模态框的透明背景时，模态框的zIndex值变为-9999，会隐藏在  
+{<span style="white-space:pre">                             </span>背景图片的后面，点击模态框本身是不会消失的<span style="white-space:pre">  
+</span>  
+    this.style.zIndex = "-9999";  
+    document.getElementById("modal-show2").style.zIndex = "-9999";  
+};  
+  
+  
+</script>  
+  
+</body>  
+</html>  

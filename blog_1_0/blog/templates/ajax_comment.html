@@ -1,0 +1,14 @@
+  <div class="article" id="comment">
+        {% if comments %}
+            <h2><span>{{ article_list.comment_set.all.count }}</span> Responses</h2><div class="clr"></div>
+        {% for comment in comments %}
+          <div class="comment">
+            <a href="#"><img src="/static/images/userpic.gif" width="40" height="40" alt="user" class="userpic" /></a>
+            <p><a href="#">{{ comment.username }}</a> Says:<br />{{ comment.create_time | date:"Y-m-d H:i:s"  }}</p>
+            <p>{{ comment.content }}</p>
+          </div>
+        {% endfor %}
+        {% else %}
+        <h2><span>No comment yet~</span></h2>
+        {% endif %}
+        </div>

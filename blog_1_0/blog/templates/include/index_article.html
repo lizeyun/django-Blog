@@ -1,0 +1,31 @@
+{%  url "article_view" article.id as article_url %}
+
+<div  id="blog1" class="blog">
+                <!-- First Blog Post -->
+                <h2>
+                    <a href="{{ article_url }}">{{ article.title }}</a>
+                </h2>
+                <div class="lead">
+                    <p class="left">by <a href="index.php">Admin </a></p>
+                    <p style="font-size:13px;padding-left:180px" class="right">
+                        <span class="glyphicon glyphicon-thumbs-up"></span>{{ article.like_count }}&nbsp;&nbsp;
+                        <span class="glyphicon glyphicon-eye-open"></span>{{ article.click_count }}&nbsp;&nbsp;
+                        <span class="glyphicon glyphicon-time"></span>
+                        Posted on {{ article.create_time }}
+                    </p>
+                </div>
+                <div class="media">
+                    <div class="media-left">
+                        <img class="img-responsive" src="http://placehold.it/250x180" alt="">
+                    </div>
+                    <div class="media-right">
+
+                        <p>{{ article.content }}
+                            <a  href="{{ article_url }}">Read More
+                                <span class="glyphicon glyphicon-chevron-right"></span></a>
+                        </p>
+                        <br>
+
+                    </div>
+                 </div>
+</div>

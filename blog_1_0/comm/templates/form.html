@@ -1,0 +1,52 @@
+<html><head><title> comm</title>
+<meta charset="utf-8">
+
+
+
+</head>
+
+<body>
+<h2> 试一试
+</h2>
+{{ content.id }}{{ content.content }}
+<form id="user_content" method ='post' enctype="multipart/form-data">
+    <textarea cols="40" id="id_content" name="replay_content" rows="10"></textarea>
+    <input id='put' type="submit" value = "提交" />
+</form>
+<div id = "comm">
+    <ul class = 'con'>
+        {% for replay in replays %}
+
+            {% if replay.replay_user %}
+                {{ replay.replay_user }}
+                 <pre>{{ replay.replay_content }}</pre>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+</body>
+<script src="/static/js/jquery.js"></script>
+<script>
+    $(function() {
+             $("#user_content").submit(function(){
+             var replay_content = $("#id_content").val();
+        $.ajax({
+                 type:"post",
+                 dataType:"json",
+                 url:"/comm/ar/{{ content.id }}",
+                 data: {
+                 'replay_content': replay_content
+                 },
+        success: function(data){
+                $('#user_content')[0].reset();
+                var newcomment = 'admin' + '<pre>'+ data.content +'</pre>';
+                console.log(data.content);
+                $(".con").append(newcomment);
+                 }
+        });
+                return false;
+         });
+     });
+
+</script>
+</html>

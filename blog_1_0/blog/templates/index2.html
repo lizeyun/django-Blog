@@ -1,0 +1,172 @@
+{% extends "base2.html" %}
+{% block content %}
+{% load custom_markdown %}
+<div class="content" style="width:">
+    <div class="content_resize">
+      <div class="mainbar">
+
+                <div class="article" id='sec_daohang'>
+                    <a href="/blog/"><i class="fa fa-home"></i></a>&nbsp
+                    {% if sec_title %}
+                            <i class="fa fa-chevron-right" style=></i>&nbsp
+                            <a href="">{{ first_title }} - {{ sec_title }}</a>
+                    {% endif %}
+                </div>
+             {% if obj_list %}
+            {% for article in obj_list %}
+                <div class="article" style="height: 255px">
+                    <p style="font-size: 23px;padding: 0;margin: 0">
+                        <a class="auth" href=""><span>Lzy.</span></a>
+                        <span class="title"><a href="/blog/article/{{ article.id }}" >{{ article.title |capfirst }}</a></span>
+                    </p>
+                    <div class="article_info" style="height: 30px">
+                        <span style="float: left;">{{ article.create_time }}&nbsp&nbsp</span>
+                     <span style="float: left;"><i class="fa fa-heart"></i>{{ article.like_count }}&nbsp&nbsp</span>
+                      <span style="float: left;"><i class="fa fa-comment"></i>{{ article.comment_set.all.count }}&nbsp&nbsp</span>
+                     <span style="float: left;"><i class="fa fa-eye"></i>{{ article.click_count }}&nbsp&nbsp</span>
+
+                        <div style="float: right;" id="tags">
+                            {% for tag in article.tags.all %}
+                                <a href="/blog/tag/{{ tag }}"><span id="tag" class="tag_{{ tag.id | get_digit:1 }}" style="margin: 0 1">{{ tag }}</span></a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="media" style="margin-top: 9px">
+                        <div class="media-left">
+                            <a href="/blog/article/{{ article.id }}">
+                            <img class="img-responsive"src ="/media/{{ article.image }}" style="width: 92%" alt="" />
+                            </a>
+                        </div>
+                        <div class="media-right" style="position:relative;height: 157px;width: 63%;float:left">
+                            <div>
+                                <p>{{ article.content | truncatewords:"10" | removetags:"pre code" }}
+                                 </p>
+                            </div>
+                            <div id="read" style="position:absolute; right:13px; bottom:0;">
+                                 <p style="margin: 0px;"><a href="/blog/article/{{ article.id }}" id="readmore">Read more&nbsp
+                                      <i class="fa fa-chevron-right"></i>
+                                     </a>
+                                 </p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+          {% endif %}
+        <div class="article" style="padding:5px 20px 2px 20px; background:none; border:0;">
+          <p>Page 1 of 2 <span class="butons"><a href="#">3</a><a href="#">2</a> <a href="#" class="active">1</a></span></p>
+        </div>
+      </div>
+      <div class="sidebar">
+
+            <p>
+            {% if not user.is_authenticated %}
+                <button id="login" class="btn btn-primary" data-toggle="modal" data-target="#myModal" >
+                    登录 | 注册</button>
+            {% else %}
+                 <ol class="dropdown">
+                <a onMouseOver="this.style.color='#2cadff'" title="{{user.username}}"
+                   onMouseOut="this.style.color='black'" href="javascript:;"
+                   style="width: 150px; padding:10px; font-size: 15px;border-right: 0px;color: black;" data-toggle="dropdown">
+                        <img src="/static/images/head.png" width=50 height=50 alt="" width="40">
+
+                        &nbsp;
+                        {{ user }}
+                </a>
+                <ul class="dropdown-menu navbar-right" >
+                    <li><a  href="{{changepassword_url}}"style="color: #5f3b11;border-right: 0px;padding:5px" >
+                        <span class="glyphicon glyphicon-lock"></span>
+                        更改密码</a></li>
+                    <li><a id="logout" href="javascript:;" style="color: #5f3b11;border-right: 0px;padding:5px" >
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        退出登录</a></li>
+                </ul>
+
+                </ol>
+            {% endif %}
+            </p>
+
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    {% include './login.html' %}
+                    {% include './regi.html' %}
+                </div>
+            </div>
+        <script language="JavaScript" type="text/JavaScript">
+            function show() {
+                $(regi).css("display","block");
+                $(login_1).css("display","none");
+                }
+            function hide() {
+                $(regi).css("display", "none");
+                $(login_1).css("display","block");
+                }
+             $("#logout").click(function(){
+                $.ajax({
+                    type:"POST",
+                    url:"/blog/user/logout/",
+                    success:function(data,textStatus){
+                        alert(data);
+                        location.reload();
+                    },
+                    error:function(XMLHttpRequest, textStatus, errorThrown){
+                        alert(XMLHttpRequest.responseText);
+                    }
+                    });
+                    return false;
+                });
+        </script>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"><span class="glyphicon glyphicon-tags"></span>&nbsp&nbsp标签分类</p>
+          <div class="clr"></div>
+          <ul class="sb_menu">
+
+                <li style="line-height: 28px;border-bottom: hidden;padding-left: 0px" id="tags">
+
+                    {% for tags in r_tag_list %}
+                        <a class="tag_color" style="font-size: 13px;" href="{% url 'tag_view' tags.name %}">
+                        <span id="tag" class="tag_{{ tags.id | get_digit:1 }}">
+                            {{ tags.name }}
+                        </span></a>
+                    {% endfor %}
+                </li>
+          </ul>
+        </div>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"><span class="glyphicon glyphicon-calendar"></span> 时间分类</p>
+          <div class="clr"></div>
+          <ul class="ex_menu">
+            {% for date in year_month_number %}
+            <li><a href="/blog/datearticle/{{ date.year }}/{{ date.month }}">
+                        {{ date.year }}-{{ date.month }} [{{ date.counter }}]
+                        </a><br />
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="gadget">
+            <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0"> <span class="glyphicon glyphicon-flag"></span>  热门文章</p>
+            <div class="clr"></div>
+            <ul class="ex_menu">
+                {% if article_rank %}
+
+                {% for hot in article_rank %}
+                    <li><a href="/blog/article/{{ hot.id }}">{{ hot.title }}</a></li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+        <div class="gadget">
+          <p style="font-size: 16px;font-weight: 600;padding: 10px 0 0 0">Say something</p>
+          <div class="clr"></div>
+          <p>   <img src="/static/images/test_1.gif" alt="image" width="18" height="17" /> <em>无人与我共黄昏 </em>.<img src="/static/images/test_2.gif" alt="image" width="18" height="17" /></p>
+          <p style="float:right;"><strong>Earl Nightingale</strong></p>
+          </div>
+      </div>
+      <div class="clr"></div>
+    </div>
+	</div>
+{% endblock %}

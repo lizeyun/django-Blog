@@ -1,0 +1,44 @@
+/*!
+ * Start Bootstrap - Blog Post (http://startbootstrap.com/)
+ * Copyright 2013-2016 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
+ */
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+.blog .lead .left{
+     float: left;
+ }
+.lead{
+    height: 35px;
+}
+.blog .lead .right{
+    float: right;
+}
+.media-right{
+    margin-left:10px;
+    width:65%;
+    height:162px;
+    font-size:17px;
+}
+.blog{
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+.list-unstyled{
+    width:100%;
+    float: left;
+    height:90px;
+    overflow: hidden;
+}
+.list-unstyled li{
+    float: left;
+    margin:5px;
+}
+footer {
+    margin: 50px 0;
+    background-color:black;
+    color:white;
+    height:42px
+}

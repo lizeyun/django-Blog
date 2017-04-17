@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if posts %}
+    {% for i in posts %}
+    <p> <a href="/comm/ar/{{ i.id }}">{{ i.username  }}</a></p>
+    <p>{{ i.content }}</p><br>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>
