@@ -4,9 +4,7 @@
 	   dhango 1.8.0
 	   
 require: 1.django-grappelli
-
 		 2.markdown2
-		 
 		 3.django-pagedown
 
 $python manage.py syncdb
